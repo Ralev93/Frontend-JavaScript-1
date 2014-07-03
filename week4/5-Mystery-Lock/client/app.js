@@ -68,4 +68,20 @@ $(document).ready(function() {
       alert("The secret you have sent is not the final one!");
     });
   });
+
+  $(document).on("click", ".secret-button" ,function() {
+   var
+       index = $(this).data("index"),
+       label = $(this).data("token");
+
+   $.ajax({
+      url: "http://localhost:3000/secret/" + label,
+      type: "GET"
+    }).done(function(data) {
+      concatenatedSecrets += data.secret;
+    });
+
+    enableButton(index +=1);
+
+  });
 });
