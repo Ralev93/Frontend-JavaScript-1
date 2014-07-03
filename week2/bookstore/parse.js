@@ -2,7 +2,7 @@ var _ = require("lodash");
 var data = require("./data");
 var fs = require("fs");
 
-var picks = ["isbn", "title", "image_url", "small_image_url", "num_pages", "description", "average_rating", "publised"]
+var picks = ["isbn", "title", "image_url", "small_image_url", "num_pages", "description", "average_rating", "published"]
 
 var books = [];
 

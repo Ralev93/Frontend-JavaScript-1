@@ -5,6 +5,7 @@
     <title>Gallery with Google Image Search</title>
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="slider.css">
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
   </head>
   <body>
     <div class="container">
@@ -32,5 +33,14 @@
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="app.js"></script>
+    <script type="text/javascript">
+      google.load("search", "1");
+      var imageSearch = new google.search.ImageSearch();
+      imageSearch.setSearchCompleteCallback(this, searchComplete, null);
+      imageSearch.execute("Subaru STI");
+      google.search.Search.getBranding('branding');
+      alert("wjat");
+
+    </script>
   </body>
 </html>
