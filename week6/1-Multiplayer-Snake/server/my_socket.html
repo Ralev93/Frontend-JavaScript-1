@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Snake</title>
+</head>
+
+<body>
+<div id="game_canvas">
+    	<canvas id="snakeCanvas" width="500" height="350" style="border: 1px solid;">\
+            <img id="grass" src="images/grass.jpg">
+            <img id="apple" src="images/apple.png">
+            <img id="snake" src="images/snake-skin-1.jpg">
+        </canvas>	
+        <canvas id="scoreCanvas" width="500" height="350"></canvas>
+
+</div>
+
+<div id="gameController">
+    <input type="text" id="playerName" value="RadoRado">
+    <button id="createGame">Create Game</button>
+
+    <br>
+    <input type="text" id="joinGameId">
+    <button id="joinGame">Join Game</button>
+</div>
+</body>
+
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/socket.io-client/socket.io.js"></script>
+    <script type="text/javascript" src="snake.js"></script>
+    <script src="app.js"></script>
+
+</html>

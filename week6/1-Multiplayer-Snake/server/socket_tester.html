@@ -1,17 +1,243 @@
-<input type="text" id="playerName" value="RadoRado">
-<button id="createGame">Create Game</button>
+<!DOCTYPE html>
+<html>
 
-<br>
-<input type="text" id="joinGameId">
-<button id="joinGame">Join Game</button>
+<head>
+    <title>Canvas Snake</title>
+    <link rel="stylesheet" href="../client/Canvas-Snake/img/style.css">
+</head>
+
+<body align="center">
+    <div id="game_canvas" style="display:none">
+   <img class="logo" src="../client/Canvas-Snake/img/logo.png" alt='Snake'>
+    <canvas id='snakeCanvas' width="300" height="300" style="background-color: whitesmoke; border: 4px solid rgb(226, 1, 127); border-radius: 9px; border-style:outset;"></canvas>
+    <div id="game_info">
+        <div id="game_info_wrapper">
+            <p>
+                <label id="points_label">Points:
+                    <span id="points"></span>
+                </label>
+
+            </p>
+            <p id="speed">
+                <img id="apple" src="../client/Canvas-Snake/img/apple.png">
+                <label id="speed_label">Speed:</label>
+                <input type="range" id="speed_range" onchange="console.log(this.value); speed = this.value;">
+            </p>
+            <p>
+                <label id="color_label">Color:</label>
+                <input id='colorpicker' />
+            </p>
+        </div>
+    </div> </div>
+
+<div id="gameController">
+    <input type="text" id="playerName" value="RadoRado">
+    <button id="createGame">Create Game</button>
+
+    <br>
+    <input type="text" id="joinGameId">
+    <button id="joinGame">Join Game</button>
+</div>
 <script src="bower_components/jquery/dist/jquery.js"></script>
 <script src="bower_components/socket.io-client/socket.io.js"></script>
+<link href="../client/Canvas-Snake/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="../client/Canvas-Snake/img/spectrum.css">
+<link rel="stylesheet" href="../client/Canvas-Snake/img/style.css">
 
 <script>
+    var canvas = document.getElementById('snakeCanvas');
+    var ctx = canvas.getContext("2d");
+    var canvasWidth = $('#snakeCanvas').width();
+    var canvasHeight = $('#snakeCanvas').height();
+
+    var snake = (function(ctx) {
+        var tile = [];
+        [1, 2, 3, 4].forEach(function(i) {
+            tile.push(new Tile(i, 29, 10, ctx));
+        });
+        console.log("HEYYEYEY", tile);
+        var direction = [1, 0];
+        var food;
+        var speed;
+        window.color;
+        window.points = 0;
+        var restart = function() {
+            ctx.clearRect(0, 0, 300, 300);
+            ctx.fillStyle = 'rgb(226, 1, 127)';
+            ctx.font = "bold 40px Arial";
+            ctx.fillText("GAME OVER", 28, 150);
+            ctx.fillStyle = 'darkgray';
+            ctx.font = "13px Arial";
+            ctx.fillText("press enter to restart", 90, 290);
+            points = 0;
+            $(document).keydown(function(event) {
+                var key = event.which;
+                if (key === 13) {
+                    tile = [];
+                    [1, 2, 3, 4].forEach(function(i) {
+                        tile.push(new Tile(i, 0, 10, ctx));
+                    });
+                    direction = [1, 0];
+                    food = new Point(random(), random());
+                }
+            });
+
+        };
+
+        var getTiles = function() {
+            return tile;
+        }
+
+        var getPoints = function() {
+            $('#points').empty();
+            $('#points').append(points);
+        };
+        var stepOver = function() {
+            var a = 1;
+            for (var i = 0; i < tile.length - 1; i++) {
+                if (tile[tile.length - 1].x === tile[i].x && tile[tile.length - 1].y === tile[i].y) {
+                    tile[tile.length - 1].x = 31;
+                    outOfCanvas();
+                }
+            }
+        };
+
+        var outOfCanvas = function() {
+            if (tile[tile.length - 1].x >= 31 || tile[tile.length - 1].x < 0 ||
+                tile[tile.length - 1].y >= 31 || tile[tile.length - 1].y <= -1)
+                restart();
+        };
+
+        var isFed = function() {
+            if (tile[tile.length - 1].x * 10 === food.x && (tile[tile.length - 1].y * 10 === food.y)) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+
+        var print = function() {
+            tile.forEach(function(tile) {
+                tile.print();
+            });
+        };
+
+        var random = function() {
+            var a = Math.floor((Math.random() * 290) + 10);
+            a = a - a % 10;
+            return a;
+        };
+
+        var Point = function(x, y) {
+            this.x = x;
+            this.y = y;
+            this.print = function() {
+                //ctx.fillStyle = "green";
+                //ctx.fillRect(this.x, this.y, 10, 10);
+                var apple = document.getElementById('apple');
+                ctx.drawImage(apple, this.x, this.y);
+            }
+        };
+
+        var getSpeed = function() {
+            speed = $("#speed_range").val();
+        };
+
+        var keysToDirections = {
+            37: [-1, 0],
+            38: [0, -1],
+            39: [1, 0],
+            40: [0, 1]
+        };
+        $(document).keydown(function(event) {
+            var key = event.which;
+            var current_direction = keysToDirections[key];
+
+            if (current_direction) {
+                direction = current_direction;
+                event.preventDefault();
+            }
+
+        });
+        var move = function() {
+            var head = tile[tile.length - 1];
+            [1, 0]; // right
+            [-1, 0]; //left
+            [0, -1]; // up
+            [0, 1]; // down
+
+            new_head = new Tile(head.x + direction[0], head.y + direction[1], 10, ctx);
+
+            tile.push(new_head);
+            if (!isFed()) {
+                tile.shift();
+            }
+            head = new_head;
+        };
+
+        food = new Point(random(), random());
+        speed = 50;
+       // color = $("#colorpicker").spectrum("get").toString();
+        var gameLoop = function() {
+            timeout = function() {
+                setTimeout(function() {
+                   // color = $("#colorpicker").spectrum("get").toString();
+                    speed = 100 - $('#speed_range').val();
+                    speed = 100 - speed;
+                    if (speed > 0) {
+                        ctx.clearRect(0, 0, 300, 300);
+                        snake.move();
+                        snake.print();
+                        if (snake.isFed()) {
+                            points++;
+                            food = new Point(random(), random());
+                        }
+                        getPoints();
+                        food.print();
+                        snake.outOfCanvas();
+                        snake.stepOver();
+                    } else {
+
+                    }
+                    timeout();
+                }, 100 - speed)
+            };
+            timeout();
+        }();
+
+        return {
+            print: print,
+            move: move,
+            gameLoop: gameLoop,
+            Point: Point,
+            isFed: isFed,
+            stepOver: stepOver,
+            outOfCanvas: outOfCanvas,
+            getSpeed: getSpeed,
+            getPoints: getPoints,
+            getTiles: getTiles
+        }
+    }(ctx))
+    snake.print();
+
+    function Tile(x, y, size, ctx) {
+        this.x = x;
+        this.y = y;
+        this.ctx = ctx;
+        this.size = size;
+        this.print = function() {
+            ctx.fillStyle = "red";
+            ctx.fillRect(this.x * this.size, this.y * this.size, this.size, this.size);
+        }
+    }
+    //=======================================================
+    //=======================================================
+    //=======================================================
     $(function() {
         console.log("I AM READY");
         var
-            socket = new io("http://localhost:3000"),
+            ADDRESS = "http://localhost";//"http://192.168.1.249";
+            socket = new io(ADDRESS + ":3000"),
             socketId = null,
             gameId = null;
 
@@ -25,6 +251,13 @@
         socket.on("start", function(data) {
             console.log("game has started");
             console.log(data);
+
+            $("#gameController").hide();
+            $("#game_canvas").show();
+            //Snake.gameLoop();
+            socket.emit("move", {
+              player1Snake: snake.getTiles()   
+            });
         });
 
         socket.on("render", function(data) {
@@ -35,7 +268,7 @@
         function runAfterSocketHasConnected() {
             $("#createGame").on("click", function() {
                 $.ajax({
-                    url: "http://localhost:3000/createGame",
+                    url: ADDRESS + ":3000/createGame",
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify({
@@ -51,7 +284,7 @@
             $("#joinGame").on("click", function() {
                 gameId = $("#joinGameId").val();
                 $.ajax({
-                    url: "http://localhost:3000/joinGame",
+                    url: ADDRESS + ":3000/joinGame",
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify({
