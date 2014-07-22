@@ -4,20 +4,14 @@ var data = require("./data");
 var helper = {};
 
 data.forEach(function (c) {
-  var
-    date    = c["fields"]["date"],
-    student = c["fields"]["student"];
+  var date    = c["fields"]["date"],
+      student = c["fields"]["student"];
 
   if(!helper[date]) {
     helper[date] = {};
   }
 
-  if(helper[date][student]) {
-    console.log(c); // A duplicate is found
-  }
-  else {
-    helper[date][student] = 1; // or whatever non-negative number
-  }
+  helper[date][student] ? console.log(c) : helper[date][student] = 1;
 });
 
 //time:   O(n)
