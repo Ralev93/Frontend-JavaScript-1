@@ -12,12 +12,12 @@ $.ajax({
   dataType: "json",
 }).done(function(data) {
   context  = {'name': data },
-	html     = template(context);
+  html     = template(context);
 
-	$("#names").append(html);
+  $("#names").append(html);
 
-	listenForChange();
-	return;
+  listenForChange();
+  return;
 });
 
 var listenForChange = function() {
