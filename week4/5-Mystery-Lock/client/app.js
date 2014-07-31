@@ -55,6 +55,7 @@ $(document).ready(function() {
   function enableButton(index) {
     var selectorTemplate = "button[data-index='<%= index %>']",
         selector = _.template(selectorTemplate, {index: index});
+        console.log("the selector is :",selector);
 
     $(selector).removeAttr("disabled");
   }
@@ -105,6 +106,8 @@ $(document).ready(function() {
     });
 
     enableButton(index +=1);
+
+    $(this).attr("disabled", "disabled");
 
   });
 });

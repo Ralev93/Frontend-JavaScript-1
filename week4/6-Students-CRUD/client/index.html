@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Students!</title>
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div id="buttons-container">
+                    <button class="btn btn-lg btn-success create">Create Student </button>
+                    <button class="btn btn-lg btn-success update">Update Student </button>
+                    <button class="btn btn-lg btn-success listing">List Students </button>
+                    <button class="btn btn-lg btn-success delete">Delete Student </button>
+                </div>
+                 <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>Number</th>
+                            <th>Courses</th>
+                          </tr>
+                        </thead>
+                        <tbody id="student-table-body">
+                        </tbody>
+                    </table>
+                
+            </div>
+        </div>
+    </div>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/handlebars/handlebars.js"> </script>
+    <script id="entry-template" type="text/x-handlebars-template">
+     {{#each students}}
+        <tr> 
+           <td> {{name}} </td> 
+           <td> {{facultyNumber}} </td> 
+           <td> {{courses}} </td> 
+        </tr>
+     {{/each}}  
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>
