@@ -1,6 +1,6 @@
 "use strict"
 var
-	arr = [1,2,3],
+  arr = [1,2,3],
   source   = $("#names-template").html(),
   template = Handlebars.compile(source), context, html, result = [];
 
@@ -21,18 +21,18 @@ $.ajax({
 });
 
 var listenForChange = function() {
-	$(".updateName").on("click", function() {
-    var newName = $(this).parent().find(".enter-name").val();
-    var nameId = parseInt($(this).data("name-id"));
+    $(".updateName").on("click", function() {
+      var newName = $(this).parent().find(".enter-name").val();
+      var nameId = parseInt($(this).data("name-id"));
 
-   $.ajax({
-    	url: "http://localhost:8080/name",
-      type: "POST",
-      contentType: "application/json",
-      dataType: "json",
-      data: JSON.stringify({
-      	name: newName,
-      	nameId: nameId
+     $.ajax({
+      	url: "http://localhost:8080/name",
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+       	  name: newName,
+         nameId: nameId
       })
     });
   });
