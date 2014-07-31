@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Var names</title>
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="">
+    <style>
+
+.enter-name {
+    width: 300px;
+    float:left;
+    margin: 0 10px;
+}
+</style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+	     <form action="demo_form.asp" id="names">
+	     </form>
+	</div>
+    </div> 
+
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/handlebars/handlebars.js"> </script>
+    <script id="names-template" type="text/x-handlebars-template">
+	{{#each name}}
+	  <div id="{{this.nameId}}">
+	    <input type="text" class="form-control enter-name" value="{{name}}">
+	    <button type="button" data-name-id="{{nameId}}" class="btn btn-primary updateName">Update name</button>
+	    <br>
+	  <div>
+	{{/each}}
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>
