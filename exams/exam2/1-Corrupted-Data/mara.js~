@@ -1,0 +1,21 @@
+"use strict"
+var data = require("./data");
+var _ = require("./lodash");
+
+var corruptedData = function(data){
+  var result = [];
+  //console.log("uhoo");
+  var grouped = _.groupBy(data, function(item)
+    {return item.fields.student + "-" + item.fields.date;});
+	//console.log(grouped, "alooou");
+  Object.keys(grouped).forEach(function(key){
+    if(grouped[key].length > 1){
+      grouped[key].shift();
+      result.push(grouped[key]);
+
+    }
+  });
+  return _.flatten(result);
+};
+
+console.log("the result: ",corruptedData(data));
